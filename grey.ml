@@ -38,7 +38,7 @@ let image2grey src dst =
   let (w,h) = get_dims(src) in
   for i = 0 to h do
     for j = 0 to w do
-      let color = Sdlvideo.get_pixel_color src i j  in
+      let color = Sdlvideo.get_pixel_color src i j in
       Sdlvideo.put_pixel_color dst i j (color2grey(color));
     done
   done
@@ -117,6 +117,31 @@ let cleaning src dst =
     done
   done
 
+let abs a =
+  if a < 0 then
+    -a
+  else 
+    a
+
+let abs3 (a,b,c) =
+  let x = abs a in
+  let y = abs b in
+  let z = abs c in
+  (x,y,z)
+  
+
+let contrast src dst =
+  let (w,h) = get_dims(src) in
+  for i = 1 to h-1 do
+    for j = 1 to w-1 do
+      let mat = get_matrice i j src in
+      let color = convulation mat ((0,1,0),(1,5,1),(0,1,0)) in
+      Sdlvideo.put_pixel_color dst i j (abs3 color);
+    done
+  done
+
+
+
 (* main *)
 let main () =
   begin
@@ -146,6 +171,10 @@ let main () =
       wait_key (); 
       (*on applique le philtre de gommage*)
       cleaning new_img new_img;
+      show new_img display;
+      wait_key ();
+      (*on contraste l'image *)
+      contrast new_img new_img;
       show new_img display;
       wait_key ();
       (* on quitte *)
