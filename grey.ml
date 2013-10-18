@@ -40,6 +40,23 @@ let image2grey src dst =
     done
   done
 
+let color2blackwhite color =
+  match color with
+    (x,y,z) when (x=y)&(x=z) -> if (x <127)then (0,0,0) else (255,255,255)
+  | _ -> color
+
+let image2blackwhite src dst =
+  let (w,h) = get_dims(src) in
+  for i = 0 to h do
+    for j = 0 to w do
+      let color = Sdlvideo.get_pixel_color src i j  in
+      Sdlvideo.put_pixel_color dst i j (color2blackwhite(color));
+    done
+  done
+
+
+
+
 (* main *)
 let main () =
   begin
@@ -63,7 +80,9 @@ let main () =
       show new_img display;
       (* on attend une touche *)
       wait_key ();
-
+      image2blackwhite new_img new_img;
+      show new_img display;
+      wait_key (); 
       (* on quitte *)
       exit 0
   end
