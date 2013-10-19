@@ -10,8 +10,10 @@ let sup3 (a,b,c) (x,y,z) =
 let pixel_is_white img x y = 
   sup3 (Sdlvideo.get_pixel_color img x y) (127,127,127)
     
-let et a b =
-  a&&b
+let is_black_and_white (a,b) =
+  match (a,b) with
+  |(false,_)|(_,false) -> false;
+  |_ -> true
     
 let line_is_white img y w  =
   let a = ref true in
@@ -38,7 +40,7 @@ let green_line dst h w =
 let write_green_up src dst =
   let (w,h) = get_dims(src) in
   for j = 1 to h-1 do
-    if (line_is_white src (j-1) w) && (line_is_white src j w) then
+    if (line_is_white src (j-1) w)==(line_is_white src j w) then
       copy_line src dst j w
     else
       begin
