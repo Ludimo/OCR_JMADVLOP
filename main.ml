@@ -25,6 +25,12 @@ let show img dst =
     Sdlvideo.blit_surface d dst ();
     Sdlvideo.flip dst
 
+let max x y = 
+  if x > y then
+    x
+  else
+    y
+
 
 (* main *)
 let main () =
@@ -40,6 +46,8 @@ let main () =
     let (w,h) = get_dims img in
     let new_img = Sdlvideo.create_RGB_surface_format img[] w h in
     Grey.image2grey img new_img;
+    let rot_img = Sdlvideo.create_RGB_surface_format img[] (max w h) (max w h) in
+    Grey.image2grey img rot_img;
     (* On crée la surface d'affichage en doublebuffering *)
     let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
       (* on affiche l'image *)
@@ -61,9 +69,14 @@ let main () =
       Grey.contrast new_img new_img;
       show new_img display;
       wait_key ();
+      (*teste de rotation*)
+      Rotation.rotate img rot_img ((3.14159265359)/.2.);
+      (*on determine les zones de texte prochainement*)
+      show rot_img display;
+      wait_key ();
       (* on quitte *)
       exit 0
   end
 
-(* la fonction main ne vas pas gerer l'interface*)
+(* la fonction main ne vas pas gerer l'interface pour l'instant*)
 let _ = main ()
