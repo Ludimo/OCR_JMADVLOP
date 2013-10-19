@@ -71,8 +71,11 @@ let main () =
       wait_key ();
       (*teste de rotation*)
       Rotation.rotate img rot_img ((3.14159265359)/.2.);
-      (*on determine les zones de texte prochainement*)
       show rot_img display;
+      wait_key ();
+      (*on determine les zones de texte prochainement*)
+      Line.write_green_up img new_img;
+      show new_img display;
       wait_key ();
       (* on quitte *)
       exit 0
