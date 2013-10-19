@@ -13,8 +13,8 @@ let color2grey color =
 (*applique la couleur grise une image a partir d'une image source *)
 let image2grey src dst = 
   let (w,h) = get_dims(src) in
-  for i = 0 to h do
-    for j = 0 to w do
+  for i = 0 to w do
+    for j = 0 to h do
       let color = Sdlvideo.get_pixel_color src i j in
       Sdlvideo.put_pixel_color dst i j (color2grey(color));
     done
@@ -29,8 +29,8 @@ let color2blackwhite color =
 (*applique le philtre black&white*)
 let image2blackwhite src dst =
   let (w,h) = get_dims(src) in
-  for i = 0 to h do
-    for j = 0 to w do
+  for i = 0 to w do
+    for j = 0 to h do
       let color = Sdlvideo.get_pixel_color src i j  in
       Sdlvideo.put_pixel_color dst i j (color2blackwhite(color));
     done
@@ -86,8 +86,8 @@ let get_matrice  x y img =
 
 let cleaning src dst = 
   let (w,h) = get_dims(src) in
-  for i = 1 to h-1 do
-    for j = 1 to w-1 do
+  for i = 1 to w-1 do
+    for j = 1 to h-1 do
       let mat = get_matrice i j src in
       let color = convulation mat ((1,1,1),(1,5,1),(1,1,1)) in
       Sdlvideo.put_pixel_color dst i j color;
@@ -106,13 +106,43 @@ let abs3 (a,b,c) =
   let z = abs c in
   (x,y,z)
   
+let  limite (a,b,c) =
+  let x =
+    if a < 0 then
+      0
+    else
+      if a > 255 then
+	255
+      else
+	a
+  in
+  let y =
+    if b < 0 then
+      0
+    else
+      if b > 255 then
+        255
+      else
+        b
+  in
+  let z =
+    if c < 0 then
+      0
+    else
+      if c > 255 then
+        255
+      else
+        c
+  in
+  (x,y,z)
+  
 
 let contrast src dst =
   let (w,h) = get_dims(src) in
-  for i = 1 to h-1 do
-    for j = 1 to w-1 do
+  for i = 1 to w-1 do
+    for j = 1 to h-1 do
       let mat = get_matrice i j src in
-      let color = convulation mat ((0,1,0),(1,5,1),(0,1,0)) in
-      Sdlvideo.put_pixel_color dst i j (abs3 color);
+      let color = convulation mat ((0,-1,0),(-1,5,-1),(0,-1,0)) in
+      Sdlvideo.put_pixel_color dst i j (limite color);
     done
   done
