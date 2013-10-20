@@ -58,23 +58,23 @@ let main () =
       (* on attend une touche *)
       wait_key ();
       (*on applique le philtre black&white*)
-      Grey.image2blackwhite new_img new_img;
-      show new_img display;
+      Grey.image2blackwhite new_img img;
+      show img display;
       wait_key ();
       (*on applique le philtre de gommage*)
-      Grey.cleaning new_img new_img;
+      Grey.cleaning img new_img;
       show new_img display;
       wait_key ();
       (*on contraste l'image *)
-      Grey.contrast new_img new_img;
-      show new_img display;
+      Grey.contrast new_img img;
+      show img display;
       wait_key ();
       (*teste de rotation*)
       Rotation.rotate img rot_img ((3.14159265359)/.2.);
       show rot_img display;
       wait_key ();
       (*on determine les zones de texte prochainement*)
-      Line.write_green_up img new_img;
+      Line.write_green img new_img;
       show new_img display;
       wait_key ();
       (* on quitte *)

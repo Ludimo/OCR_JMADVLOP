@@ -8,11 +8,16 @@ let sup3 (a,b,c) (x,y,z) =
   s1 >= s2
     
 let pixel_is_white img x y = 
-  sup3 (Sdlvideo.get_pixel_color img x y) (127,127,127)
+  sup3 (Sdlvideo.get_pixel_color img x y) (0,255,0)
     
+let is_white_and_black (a,b) =
+  match (a,b) with
+  |(true,false) -> false;
+  |_ -> true
+
 let is_black_and_white (a,b) =
   match (a,b) with
-  |(false,_)|(_,false) -> false;
+  |(false,true) -> false;
   |_ -> true
     
 let line_is_white img y w  =
@@ -40,7 +45,7 @@ let green_line dst h w =
 let write_green_up src dst =
   let (w,h) = get_dims(src) in
   for j = 1 to h-1 do
-    if (line_is_white src (j-1) w)==(line_is_white src j w) then
+    if is_white_and_black ((line_is_white src (j-1) w),(line_is_white src j w)) then
       copy_line src dst j w
     else
       begin
@@ -52,7 +57,7 @@ let write_green_up src dst =
 let write_green_down src dst =
   let (w,h) = get_dims(src) in
   for j = 1 to h-1 do
-    if (line_is_white src (j+1) w) && (line_is_white src j w) then
+    if is_black_and_white  ((line_is_white src j w),(line_is_white src (j+1) w)) then
       copy_line src dst j w
     else
       begin
@@ -61,3 +66,6 @@ let write_green_down src dst =
       end
   done
   
+let write_green src dst =
+  write_green_up src dst;
+  write_green_down dst dst
