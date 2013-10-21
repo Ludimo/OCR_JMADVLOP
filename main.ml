@@ -31,6 +31,15 @@ let max x y =
   else
     y
 
+let copy_img src dst =
+  let (w,h) = get_dims src in
+  for i = 0 to w do
+    for j = 0 to h do
+      let color = Sdlvideo.get_pixel_color src i j in
+      Sdlvideo.put_pixel_color dst i j color
+    done
+  done
+	
 
 (* main *)
 let main () =
@@ -46,8 +55,10 @@ let main () =
     let (w,h) = get_dims img in
     let new_img = Sdlvideo.create_RGB_surface_format img[] w h in
     Grey.image2grey img new_img;
-    let rot_img = Sdlvideo.create_RGB_surface_format img[] (max w h) (max w h) in
-    Grey.image2grey img rot_img;
+    let rot_img = Sdlvideo.create_RGB_surface_format img[] w h in
+    copy_img img rot_img;
+    let rot_img1 = Sdlvideo.create_RGB_surface_format img[] (max w h) (max w h) in
+    copy_img img rot_img1;
     (* On crée la surface d'affichage en doublebuffering *)
     let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
       (* on affiche l'image *)
@@ -69,14 +80,20 @@ let main () =
       Grey.contrast new_img img;
       show img display;
       wait_key ();
-      (*teste de rotation*)
-      Rotation.rotate img rot_img ((3.14159265359)/.2.);
-      show rot_img display;
-      wait_key ();
+      
       (*on determine les zones de texte prochainement*)
       Line.write_green img new_img;
       show new_img display;
       wait_key ();
+      (*teste de rotation*)
+
+      Rotation.rotate rot_img rot_img1 ((3.14159265359)/.2.);
+      show rot_img1 display;
+      wait_key ();
+      Rotation.rotate rot_img rot_img1 (3.14159265359);
+      show rot_img1 display;
+      wait_key ();
+
       (* on quitte *)
       exit 0
   end
