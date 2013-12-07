@@ -16,8 +16,8 @@ let rec wait_key () =
     Sdlevent.KEYDOWN _ -> ()
     | _ -> wait_key ()
 
-(*                                                                                                                                                                                                                                                                      
-  show img dst                                                                                                                                                                                                                                                           
+(*  
+    show img dst                                                                                                                                                                                                                                                   
   affiche la surface img sur la surface de destination dst (normalement l'écran)                                                                                                                                   
 *)
 let show img dst =
@@ -39,7 +39,16 @@ let copy_img src dst =
       Sdlvideo.put_pixel_color dst i j color
     done
   done
-	
+
+(*affiche les images d'une liste*)
+let show_img_list lst =
+  let taille = (List.length lst) - 1 in
+  for i =0 to taille do
+    let (w,h) = get_dims (List.nth lst i) in
+    let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
+    show (List.nth lst i) display;
+    wait_key()
+  done
 
 (* main *)
 let main () =
@@ -80,20 +89,18 @@ let main () =
       Grey.contrast new_img img;
       show img display;
       wait_key ();
-      
-      (*on determine les zones de texte prochainement*)
-      Line.write_green img new_img;
+      (*on rbinarise*)
+       Grey.image2blackwhite img new_img;
       show new_img display;
       wait_key ();
+      (*on determine les zones de texte prochainement*)
+      Line.write_green new_img img;
+      show img display;
+      wait_key ();
       (*teste de rotation*)
-
-      Rotation.rotate rot_img rot_img1 ((3.14159265359)/.2.);
-      show rot_img1 display;
+      Line.write_green_char img new_img;
+      show img display;
       wait_key ();
-      Rotation.rotate rot_img rot_img1 (3.14159265359);
-      show rot_img1 display;
-      wait_key ();
-
       (* on quitte *)
       exit 0
   end

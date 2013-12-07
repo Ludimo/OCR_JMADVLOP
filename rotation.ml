@@ -40,7 +40,7 @@ let rad_to_deg deg =
   deg*.pi/.180.
 
 let get_tab_max tab size_x size_y =
-  let r = ref (0,0) in
+  let r = ref (0) in
   begin
     for i = 0 to size_x do
       for j = 0 to size_y do
@@ -61,21 +61,50 @@ let get_tab_ang tab size_x size_y e =
   done;
   !r
 
+
+let nbr_pixel_black img j =
+  let (x,y) = get_dims img in
+  let r = ref 0 in 
+  for i = 0 to x do
+    if pixel_is_black img i j then
+      r := !r +1
+  done;
+  !r
+
+let parcours img =
+  let (w,h) = get_dims img in
+  for j = 0 to h do
+    let po = nbr_pixel_black img j in
+    print_string "po";
+    print_string (string_of_int po);
+    print_string "\n"
+  done
+    
+
 let detect img =
   let (x,y) = get_dims img in
   let max = max x y in
-  let (size_x,size_y) = (180,2*max)in
+  let (size_x,size_y) = (180,5*max)in
   let tab = Array.make_matrix size_x size_y 0 in
   for i = 0 to (x) do
+    print_string "i";
+    print_string (string_of_int i);
+    print_string "\n";
     for j = 0 to (y) do
       if (pixel_is_black img i j) then
         for k = 0 to size_x -1 do
+          print_string "k";
+          print_string (string_of_int k);
+          print_string "\n"; 
           let r = (float_of_int i)*.cos(rad_to_deg(float_of_int(k))) +. (float_of_int j)*.sin(rad_to_deg(float_of_int(k))) +. float_of_int(max) in
+          print_string "r";
+          print_string (string_of_int (int_of_float(r)));
+          print_string "\n"; 
           tab.(k).(int_of_float(r)) <- tab.(k).(int_of_float(r)) + 1
         done 
     done
   done;
-    get_tab_ang tab size_x size_y (get_tab_max tab size_x size_y) - 90
+    (get_tab_ang tab size_x size_y (get_tab_max tab size_x size_y)) - 90
 
 let rotati src dst = 
   rotate src dst (rad_to_deg (float_of_int(detect src)))
