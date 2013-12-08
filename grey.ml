@@ -23,7 +23,7 @@ let image2grey src dst =
 (*determine le blanc ou le noir en fonction de la couleur*)
 let color2blackwhite color =
   match color with
-    (x,y,z) when (x=y)&(x=z) -> if (x <127)then (0,0,0) else (255,255,255)
+    (x,y,z) when (x==y)&(x==z) -> if (x <127)then (0,0,0) else (255,255,255)
   | _ -> color
 
 (*applique le philtre black&white*)

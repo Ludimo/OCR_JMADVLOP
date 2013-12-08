@@ -2,12 +2,15 @@
 let get_dims img =
   ((Sdlvideo.surface_info img).Sdlvideo.w, (Sdlvideo.surface_info img).Sdlvideo.h)
 
+
+    
 (* init de SDL *)
 let sdl_init () =
   begin
     Sdl.init [`EVERYTHING];
     Sdlevent.enable_events Sdlevent.all_events_mask;
   end
+
 
 (* attendre une touche ... *)
 let rec wait_key () =
@@ -89,18 +92,25 @@ let main () =
       Grey.contrast new_img img;
       show img display;
       wait_key ();
-      (*on rbinarise*)
-       Grey.image2blackwhite img new_img;
+      (*on rebinarise*)
+      Grey.image2blackwhite img new_img;
       show new_img display;
-      wait_key ();
+      wait_key (); 
+     (* Line.print_list (Line.decoupe_line1 new_img);
+      print_string "\n";
+      Line.print_list (Line.decoupe_line2 new_img);
+      print_string "\n";*)
+      Line.print_list_couple (Line.list_line_zone img);
+      print_string "\n";
+      print_string "\n";
+      (*Line.print_list_couple (Line.get_char_cid img);
+      print_string "\n";*)
+      (*Pretrait.trait img new_img ;*)
       (*on determine les zones de texte prochainement*)
       Line.write_green new_img img;
       show img display;
       wait_key ();
       (*teste de rotation*)
-      Line.write_green_char img new_img;
-      show img display;
-      wait_key ();
       (* on quitte *)
       exit 0
   end
