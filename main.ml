@@ -24,16 +24,55 @@ let rec wait_key () =
     show img dst                                                                                                                                                                                                                                                   
   affiche la surface img sur la surface de destination dst (normalement l'écran)                                                                                                                                   
 *)
+
+let rec wait_key () =
+  let e = Sdlevent.wait_event () in
+    match e with
+    | Sdlevent.KEYDOWN _ -> ()
+    | _ -> wait_key ();;
+
 let show img dst =
   let d = Sdlvideo.display_format img in
-    Sdlvideo.blit_surface d dst ();
-    Sdlvideo.flip dst
+  begin
+        Sdlvideo.blit_surface d dst ();
+        Sdlvideo.flip dst
+  end;;
 
-let max x y = 
-  if x > y then
-    x
-  else
-    y
+let create_surface w h = Sdlvideo.create_RGB_surface
+    [ `SWSURFACE ] ~w:w ~h:h ~bpp:32
+        ~rmask:Int32.zero ~gmask:Int32.zero ~bmask:Int32.zero ~amask:Int32.zero
+
+
+let surface2matrix surface =
+  let (sizex, sizey) = get_dims surface in
+  let matrix = Mmatrix.make sizex sizey false in
+        for y = 0 to sizey-1 do
+            for x = 0 to sizex-1 do
+              let (r,g,b) = Sdlvideo.get_pixel_color surface x y in
+                    matrix.(x).(y) <- (r == 0 && g == 0 && b == 0);
+            done;
+        done;
+        matrix
+
+
+let matrix2surface matrix =
+  let width = Mmatrix.get_width matrix
+  and height = Mmatrix.get_height matrix in
+  let surface = create_surface width height in
+    for x = 0 to width - 1 do
+        for y = 0 to height - 1 do
+            if matrix.(x).(y) then
+              begin
+                    Sdlvideo.put_pixel_color surface x y Sdlvideo.black
+              end
+            else
+              begin
+                    Sdlvideo.put_pixel_color surface x y Sdlvideo.white;
+              end
+        done;
+    done;
+    surface
+
 
 let copy_img src dst =
   let (w,h) = get_dims src in
@@ -43,6 +82,7 @@ let copy_img src dst =
       Sdlvideo.put_pixel_color dst i j color
     done
   done
+(*---------------------*)
 
 (*affiche les images d'une liste*)
 let show_img_list lst =
@@ -53,6 +93,46 @@ let show_img_list lst =
     show (List.nth lst i) display;
     wait_key()
   done
+
+
+(*--------ROTATION--------------------*)
+let load imagepath =
+    Sdlvideo.load_BMP imagepath
+
+let save image imagepath =
+    Sdlvideo.save_BMP image imagepath
+
+
+let resize imagepath w h =
+  begin
+    ignore(Sys.command ("convert " ^ imagepath ^ " -resize "
+    ^ string_of_int (int_of_float (float w /. float h *. 300.)) ^ "x300" ^
+    " lab/small.png"));
+    let small = Sdlloader.load_image "lab/small.png" in
+    let (w, h) = get_dims small in
+    let small_grey = create_surface w h in
+    Grey.image2grey small small_grey;
+    let small_bin = create_surface w h in
+    Grey.image2blackwhite small_grey small_bin;
+    small_bin
+    end
+
+let rotate imagepath =
+  let surface = load imagepath in
+  let (w,h) = get_dims surface in
+  let small_surface = resize imagepath w h in
+  let bin_matrix = surface2matrix surface in
+  let bin_matrix_small = surface2matrix small_surface in
+  let angle = Rotation.find_angle bin_matrix_small (-.10.0) 10.0 1.0 in
+  let angle =
+        Rotation.find_angle bin_matrix_small (angle -. 0.5) (angle +. 0.5) 0.1
+  in
+  let rotated = Rotation.rotate bin_matrix (angle) in
+  let out = matrix2surface rotated in
+        save out "lab/temp.bmp"
+
+(*------------------*)
+
 
 (* main *)
 let main () =
@@ -97,7 +177,8 @@ let main () =
       (*on rebinarise*)
       Grey.image2blackwhite img new_img;
       show new_img display;
-      wait_key (); 
+      wait_key ();
+     (*rotate "test2.bmp";*)
      (* Line.print_list (Line.decoupe_line1 new_img);
       print_string "\n";
       Line.print_list (Line.decoupe_line2 new_img);
@@ -109,9 +190,9 @@ let main () =
       print_string "\n";*)
       (*Pretrait.trait img new_img ;*)
       (*on determine les zones de texte prochainement*)
-      Line.write_green new_img img;
-      show img display;
-      wait_key ();
+      (* Line.write_green new_img img;
+         show img display;
+         wait_key ();*)
       (*teste de rotation*)
       (* on quitte *)
       exit 0
