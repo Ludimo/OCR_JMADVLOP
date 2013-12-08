@@ -1,6 +1,7 @@
 (* Dimensions d'une image *)
 let get_dims img =
-  ((Sdlvideo.surface_info img).Sdlvideo.w, (Sdlvideo.surface_info img).Sdlvideo.h)
+  ((Sdlvideo.surface_info img).Sdlvideo.w,
+   (Sdlvideo.surface_info img).Sdlvideo.h)
  
 (*retourne la luminosite moyenne *)
 let level (r,g,b) =
@@ -37,7 +38,8 @@ let image2blackwhite src dst =
   done
 
 (* additionne 9 triplets*)
-let add3 (a,b,c)(a1,b1,c1)(a2,b2,c2) (a3,b3,c3) (a4,b4,c4) (a5,b5,c5)(a6,b6,c6) (a7,b7,c7)(a8,b8,c8) = 
+let add3 (a,b,c)(a1,b1,c1)(a2,b2,c2) (a3,b3,c3) 
+    (a4,b4,c4) (a5,b5,c5)(a6,b6,c6) (a7,b7,c7)(a8,b8,c8) = 
   let i = a + a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 in
   let j = b + b1 + b2 + b3 + b4 + b5 + b6 + b7 + b8 in
   let k = c + c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 in
@@ -58,7 +60,8 @@ let div3 (a,b,c) n =
   (i,j,k)
 
 (* calcul la valeur donne par la matrice de convulation*)  
-let convulation ((a1,b1,c1),(a2,b2,c2),(a3,b3,c3)) ((x1,y1,z1),(x2,y2,z2),(x3,y3,z3)) =
+let convulation ((a1,b1,c1),(a2,b2,c2),(a3,b3,c3)) 
+    ((x1,y1,z1),(x2,y2,z2),(x3,y3,z3)) =
   let a = mult3 a1 x1 in
   let b = mult3 b1 y1 in
   let c = mult3 c1 z1 in

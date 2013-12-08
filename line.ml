@@ -1,6 +1,7 @@
 (* ---------FONCTIONS BASIQUES ------------- *)
 let get_dims img =
-  ((Sdlvideo.surface_info img).Sdlvideo.w, (Sdlvideo.surface_info img).Sdlvideo.h)
+  ((Sdlvideo.surface_info img).Sdlvideo.w,
+   (Sdlvideo.surface_info img).Sdlvideo.h)
     
 
 let is_pixel_black img x y =
@@ -51,7 +52,8 @@ let green_line dst h w =
 let write_green_up src dst =
   let (w,h) = get_dims(src) in
   for j = 1 to h-1 do
-    if is_white_and_black ((line_is_white src (j-1) w),(line_is_white src j w)) then
+    if is_white_and_black ((line_is_white src (j-1) w),
+                           (line_is_white src j w)) then
       begin
         green_line dst (j-1) w;
         copy_line src dst j w;
@@ -63,7 +65,8 @@ let write_green_up src dst =
 let write_green_down src dst =
   let (w,h) = get_dims(src) in
   for j = 1 to h-1 do
-    if is_black_and_white  ((line_is_white src j w),(line_is_white src (j+1) w)) then
+    if is_black_and_white  ((line_is_white src j w),
+                            (line_is_white src (j+1) w)) then
       begin
         green_line dst (j+1) w;
         copy_line src dst j w;
@@ -114,7 +117,8 @@ let decoupe_line1 img =
   let (w,h) = get_dims(img) in
   let list = ref [] in
   for j = 1 to h-1 do
-    if is_white_and_black ((line_is_white img (j-1) w),(line_is_white img j w)) then
+    if is_white_and_black ((line_is_white img (j-1) w),
+                           (line_is_white img j w)) then
       list := (j)::(!list)
   done;
   (List.rev !list)
@@ -123,7 +127,8 @@ let decoupe_line2 img =
   let (w,h) = get_dims(img) in
   let list = ref [] in
   for j = 1 to h-1 do
-    if is_black_and_white (((line_is_white img j) w),(line_is_white img (j+1) w)) then
+    if is_black_and_white (((line_is_white img j) w),
+                           (line_is_white img (j+1) w)) then
       list := (j)::(!list)
   done;
   (List.rev !list)
@@ -164,7 +169,8 @@ let get_char_csg img =
   for i = 0  to l do
     let (start_line, end_line) = List.nth zone i in
     for j = 1 to w do
-      if is_white_and_black ((is_column_white img (j-1) start_line end_line),(is_column_white img j start_line end_line)) then
+      if is_white_and_black ((is_column_white img (j-1) start_line end_line),
+                             (is_column_white img j start_line end_line)) then
          list := (j, (List.nth lst_up i))::(!list)
     done
   done;
@@ -180,12 +186,15 @@ let get_char_cid img =
   for i = 0  to l do
     let (start_line, end_line) = List.nth zone i in
     for j = 1 to w do
-      if is_black_and_white ((is_column_white img (j) start_line end_line),(is_column_white img (j+1) start_line end_line)) then
+      if is_black_and_white ((is_column_white img (j) start_line end_line),
+                             (is_column_white img (j+1) start_line end_line))
+      then
          list := (j, (List.nth lst_down i))::(!list)
     done
   done;
   (List.rev !list)
-(*Liste qui renvoit la position des caracteres selon les coodonees des coins superieurs et inferieurs*)
+(*Liste qui renvoit la position des caracteres 
+  selon les coodonees des coins superieurs et inferieurs*)
 let get_char_coord img =
   conc_list (get_char_csg img) (get_char_cid img)
 
@@ -213,9 +222,11 @@ let copy_img src dst start_x start_y end_x end_y =
 let show_nth_img list nth img =
   let (w,h) = get_dims img in
   let (start_line, end_line) = List.nth list nth in
-  let new_img = Sdlvideo.create_RGB_surface_format img[] w (end_line - start_line + 1) in
-    copy_img img new_img start_line end_line;
-  let display = Sdlvideo.set_video_mode w (end_line - start_line +1) [`DOUBLEBUF] in
+  let new_img = 
+    Sdlvideo.create_RGB_surface_format img[] w (end_line-start_line+1) in
+  copy_img img new_img start_line end_line;
+  let display =
+    Sdlvideo.set_video_mode w (end_line - start_line +1) [`DOUBLEBUF] in
   show new_img display;
   *)
 
@@ -226,7 +237,8 @@ let get_decoupage img =
     let (a,b) = List.nth list_decoupe i in
     let (start_x,start_y) = a in
     let (end_x,end_y) = b in
-    let new_img = Sdlvideo.create_RGB_surface_format img[] (end_x-start_x+1)(end_y-start_y+1) in
+    let new_img =  Sdlvideo.create_RGB_surface_format img[] (end_x-start_x+1)
+      (end_y-start_y+1) in
     copy_img img new_img start_x start_y end_x end_y;
     list_img := new_img:: !list_img
   done;

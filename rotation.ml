@@ -1,12 +1,14 @@
 let get_dims img =
-  (((Sdlvideo.surface_info img).Sdlvideo.w),(Sdlvideo.surface_info img).Sdlvideo.h)
+  (((Sdlvideo.surface_info img).Sdlvideo.w),
+   (Sdlvideo.surface_info img).Sdlvideo.h)
 
 
 let get_rot l m img ang=
   let(x1,y1) = get_dims img in
   let(i,j) = (float_of_int(l),float_of_int(m))in
   let (x,y) = (float_of_int (x1),float_of_int (y1)) in
-  let (xrot,yrot) = ((x/.2.)+.(i-.x/.2.)*.(cos(ang))-.(j-.y/.2.)*.(sin(ang)),(y/.2.)+.(i-.x/.2.)*.(sin(ang))+.(j-.y/.2.)*.(cos(ang)))in
+  let (xrot,yrot) = ((x/.2.)+.(i-.x/.2.)*.(cos(ang))-.(j-.y/.2.)*.(sin(ang)),
+                     (y/.2.)+.(i-.x/.2.)*.(sin(ang))+.(j-.y/.2.)*.(cos(ang)))in
   (int_of_float(xrot),int_of_float(yrot))
 
 
@@ -96,7 +98,9 @@ let detect img =
           print_string "k";
           print_string (string_of_int k);
           print_string "\n"; 
-          let r = (float_of_int i)*.cos(rad_to_deg(float_of_int(k))) +. (float_of_int j)*.sin(rad_to_deg(float_of_int(k))) +. float_of_int(max) in
+          let r = (float_of_int i)*.cos(rad_to_deg(float_of_int(k))) +.
+            (float_of_int j)*.sin(rad_to_deg(float_of_int(k))) 
+            +. float_of_int(max) in
           print_string "r";
           print_string (string_of_int (int_of_float(r)));
           print_string "\n"; 

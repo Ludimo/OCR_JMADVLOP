@@ -1,5 +1,6 @@
 let get_dims img =
-  ((Sdlvideo.surface_info img).Sdlvideo.w,(Sdlvideo.surface_info img).Sdlvideo.h)
+  ((Sdlvideo.surface_info img).Sdlvideo.w,
+   (Sdlvideo.surface_info img).Sdlvideo.h)
 
 let trait src dst =
   let (w,h) = get_dims src in

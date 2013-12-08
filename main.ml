@@ -1,6 +1,7 @@
 (* Dimensions d'une image *)
 let get_dims img =
-  ((Sdlvideo.surface_info img).Sdlvideo.w, (Sdlvideo.surface_info img).Sdlvideo.h)
+  ((Sdlvideo.surface_info img).Sdlvideo.w,
+   (Sdlvideo.surface_info img).Sdlvideo.h)
 
 
     
@@ -69,7 +70,8 @@ let main () =
     Grey.image2grey img new_img;
     let rot_img = Sdlvideo.create_RGB_surface_format img[] w h in
     copy_img img rot_img;
-    let rot_img1 = Sdlvideo.create_RGB_surface_format img[] (max w h) (max w h) in
+    let rot_img1 = Sdlvideo.create_RGB_surface_format img[] (max w h) (max w h)
+    in
     copy_img img rot_img1;
     (* On crée la surface d'affichage en doublebuffering *)
     let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
