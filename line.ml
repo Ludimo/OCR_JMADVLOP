@@ -92,8 +92,8 @@ let print_couple (a,b) =
   print_string str_a;
   print_string ",";
   print_string str_b;
-  print_string ")";
-  print_string ";"
+  print_string ")"
+  
 
 let rec print_list_couple lst =
   match lst with 
@@ -105,7 +105,25 @@ let rec print_list_couple lst =
       print_list_couple b
     end
 
+let print_4 (a,b) =
+  print_string "(";
+  print_couple a;
+  print_string ";";
+  print_couple b;
+  print_string ")"
 
+
+let rec print_list_final lst =
+  match lst with
+  |[]->();
+  |a::b -> 
+    begin
+      print_4 a ;
+      print_string "\n";
+      print_list_final b;
+    end
+
+      
 let rec conc_list l1 l2 =
   match (l1,l2) with
   |([],[]) -> []

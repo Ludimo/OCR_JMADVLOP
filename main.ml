@@ -119,13 +119,14 @@ let main () =
       Grey.image2blackwhite img new_img;
       show new_img display;
       wait_key ();
+      Line.print_list_final (Line.get_char_coord new_img);
      (* Line.print_list (Line.decoupe_line1 new_img);
       print_string "\n";
       Line.print_list (Line.decoupe_line2 new_img);
       print_string "\n";*)
-      Line.print_list_couple (Line.list_line_zone img);
+      (*Line.print_list_couple (Line.list_line_zone img);
       print_string "\n";
-      print_string "\n";
+      print_string "\n";*)
       (*Line.print_list_couple (Line.get_char_cid img);
       print_string "\n";*)
       (*Pretrait.trait img new_img ;*)
