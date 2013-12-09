@@ -74,7 +74,7 @@ let processonly funct imagepath =
     funct imagepath
 
 
-let pretraitement () =  processonly (Pretrait.trait) ("test2.bmp")
+let pretraitement () =  processonly (Pretrait.trait) ("test.bmp")
 
 let pretraitement_button = 
   let button = GButton.button
